@@ -277,7 +277,8 @@ END;
 $$;
 
 -- Secure View: tasks_view (masks otp_code to NULL for workers / non-requesters)
-CREATE OR REPLACE VIEW public.tasks_view AS
+CREATE OR REPLACE VIEW public.tasks_view
+WITH (security_invoker = true) AS
 SELECT
   id,
   requester_id,
@@ -381,12 +382,15 @@ CREATE POLICY "tasks_select_policy" ON public.tasks
     -- 1. Requester can see their own tasks anywhere
     requester_id = auth.uid()
     OR
-    -- 2. Admin can see all tasks
+    -- 2. Assigned worker can see their assigned tasks anywhere
+    assigned_worker_id = auth.uid()
+    OR
+    -- 3. Admin can see all tasks
     EXISTS (
       SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'ADMIN'
     )
     OR
-    -- 3. Workers can see OPEN tasks ONLY if within 1500 meters of their profile location
+    -- 4. Workers can see OPEN tasks ONLY if within 1500 meters of their profile location
     (
       status = 'OPEN' AND
       EXISTS (
