@@ -1,4 +1,4 @@
-# BRIEFING — 2026-11-05T17:55:00Z
+# BRIEFING — 2026-11-05T20:42:00Z
 
 ## Mission
 Execute Milestone 1: Environment & Database Foundations for the WHAP micro-task marketplace platform.
@@ -32,38 +32,45 @@ Execute Milestone 1: Environment & Database Foundations for the WHAP micro-task 
 - Updated: not yet
 
 ## Task Summary
-- **What to build**:
-  1. Workspace Hygiene & Git Init (.gitignore, git init, initial commit, verify .env.local not tracked).
-  2. MASTER_PROMPT Correction (line 3 -> `docs/WHAP Implementation Plan.pdf`).
-  3. Supabase SQL Migrations (PostGIS, 9 tables: profiles, wallets, tasks, bids, escrow_transactions, ledger_entries, reviews, notifications, config; CHECK constraints; GiST/FK/status indexes; default config; campus seed data).
-  4. Row Level Security (RLS) on all 9 tables (deny client write on wallets/ledger/escrow, spatial isolation 1.5km, OTP secrecy).
-  5. Gate verification execution script and reporting.
+- **What was built**:
+  1. Workspace Hygiene & Git Init: `.gitignore` ignoring `.env*`, `node_modules/`, `dist/`. Git repo initialized on `main`, clean baseline committed (`903511c`). Verified `.env.local` is ignored and untracked.
+  2. MASTER_PROMPT Correction: Line 3 updated from `docs/WHAP_Implementation_Plan.pdf` to `docs/WHAP Implementation Plan.pdf` without modifying the PDF.
+  3. Supabase SQL Migrations: Executed `supabase/migrations/20261105000000_m1_initial_schema.sql` on remote Supabase (`cmszsqdxztvtkwpzbvmr`). Enabled `postgis`, `uuid-ossp`, `pgcrypto`. Created 9 tables with CHECK constraints and GiST spatial indexes. Config constants and campus seed data populated.
+  4. Row Level Security (RLS): Enabled RLS on all 9 tables. Enforced spatial isolation, OTP secrecy, and direct client financial write denial.
+  5. Gate Verification: `scripts/verify_m1_gate.js` executed and passed 100% of checks.
 - **Success criteria**:
-  - `.gitignore` exists ignoring `.env*`, `node_modules/`, `dist/`.
-  - Initial commit done on main branch; `.env.local` is untracked and uncommitted.
-  - Line 3 of `MASTER_PROMPT.md` corrected.
-  - Remote Supabase database updated with PostGIS, 9 tables, indexes, constraints, RLS, and seed data.
-  - Verification script executes against remote Supabase and confirms:
+  - [x] `.gitignore` exists ignoring `.env*`, `node_modules/`, `dist/`.
+  - [x] Initial commit done on main branch; `.env.local` is untracked and uncommitted.
+  - [x] Line 3 of `MASTER_PROMPT.md` corrected.
+  - [x] Remote Supabase database updated with PostGIS, 9 tables, indexes, constraints, RLS, and seed data.
+  - [x] Verification script executes against remote Supabase and confirms:
     - Worker cannot query tasks > 1.5 km even by ID (returns 0 rows).
     - Direct client wallet update is rejected by RLS.
     - All 9 tables exist and are properly seeded.
-  - `changes.md` and `handoff.md` written in `worker_m1`.
+  - [x] `changes.md` and `handoff.md` written in `worker_m1`.
 - **Interface contracts**: PROJECT.md
 - **Code layout**: PROJECT.md § Code Layout
 
 ## Change Tracker
-- **Files modified**: None yet
-- **Build status**: Pending
+- **Files modified**:
+  - `d:\WHAP\.gitignore` — Created environment and artifact ignore rules
+  - `d:\WHAP\MASTER_PROMPT.md` — Fixed stale PDF filename reference
+  - `d:\WHAP\package.json` — Added ESM type and dependencies
+  - `d:\WHAP\supabase/migrations/20261105000000_m1_initial_schema.sql` — Schema migration with 9 tables, PostGIS, indexes, constraints, config, RLS
+  - `d:\WHAP\supabase/seed.sql` — Campus seed SQL script
+  - `d:\WHAP\scripts/run_migrations.js` — Migration and user seeding runner
+  - `d:\WHAP\scripts/verify_m1_gate.js` — Milestone 1 gate verification suite
+- **Build status**: PASS (all migration and gate verification scripts exit 0)
 - **Pending issues**: None
 
 ## Quality Status
-- **Build/test result**: Not run yet
+- **Build/test result**: PASS (Gate Verification 100% pass)
 - **Lint status**: Clean
-- **Tests added/modified**: Gate verification script
+- **Tests added/modified**: `scripts/verify_m1_gate.js`
 
 ## Key Decisions Made
-- Use direct PostgreSQL client via `pg` or Supabase REST / SQL execution endpoint with connection credentials from `.env.local` to execute SQL migration and seed scripts.
-- Implement a Node.js migration/runner script in `scripts/` to execute migration SQL cleanly and securely against remote Supabase.
+- Used direct PostgreSQL client via `pg` connecting to `db.cmszsqdxztvtkwpzbvmr.supabase.co:5432` with credentials from `.env.local` to execute DDL migrations and verify schema.
+- Used Supabase GoTrue Admin API (`supabase.auth.admin.createUser`) to provision genuine auth users with verified emails, enabling real JWT sessions for worker and requester gate testing.
 
 ## Artifact Index
 - `d:\WHAP\.agents\teamwork\worker_m1\DISPATCH.md` — Dispatch assignment
