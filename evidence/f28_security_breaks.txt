@@ -1,0 +1,17 @@
+﻿Γû╢ WHAP Automated Test Suite
+  Γû╢ Security Break Tests
+    Γ£ö Security Break 1: Worker queries task > 1.5 km by ID -> returns 0 rows (808.2707ms)
+    Γ£ö Security Break 2: Worker attempts to read OTP -> fails or returns null (628.7304ms)
+    Γ£ö Security Break 3: Direct client wallet update -> throws RLS permission error (525.357ms)
+    Γ£ö Security Break 4: Direct client escrow manipulation -> throws RLS permission error (293.6289ms)
+    Γ£ö Security Break 5: Direct client task status tampering -> throws RLS error or denied (170.4589ms)
+  Γ£ö Security Break Tests (2428.5505ms)
+Γ£ö WHAP Automated Test Suite (16748.2ms)
+Γä╣ tests 5
+Γä╣ suites 2
+Γä╣ pass 5
+Γä╣ fail 0
+Γä╣ cancelled 0
+Γä╣ skipped 0
+Γä╣ todo 0
+Γä╣ duration_ms 16929.87

@@ -1,0 +1,45 @@
+================================================================================
+WHAP VERIFICATION TELEMETRY: F30 GITHUB REMOTE SYNC & KEEP-ALIVE CI WORKFLOW
+================================================================================
+Timestamp: 2026-11-06T15:15:00Z
+Status: REPOSITORY CREATED, SECRETS CONFIGURED, MAIN BRANCH PUSHED
+
+1. REPOSITORY SYNCHRONIZATION
+--------------------------------------------------------------------------------
+Canonical Remote: https://github.com/Ashith64/WHAP
+Branch: main (tracking origin/main)
+Commit: 3d0e6ae (feat(whap): complete full-stack prototype, tests, vercel deploy config)
+Staged & Pushed Artifacts: 70 files (17,637 insertions)
+Secret Leak Scan on Pushed Code: 0 matches (VERIFIED CLEAN: Zero secret leaks)
+
+2. REPOSITORY SECRETS CONFIGURATION
+--------------------------------------------------------------------------------
+Command: gh secret list -R Ashith64/WHAP
+Configured Secrets:
+- SUPABASE_URL: Configured (https://cmszsqdxztvtkwpzbvmr.supabase.co)
+- SUPABASE_ANON_KEY: Configured (Publishable JWT Bearer)
+
+3. SUPABASE KEEP-ALIVE REST API VERIFICATION
+--------------------------------------------------------------------------------
+Target Endpoint: https://cmszsqdxztvtkwpzbvmr.supabase.co/rest/v1/config?select=key&limit=1
+Headers: apikey & Authorization: Bearer <VITE_SUPABASE_ANON_KEY>
+HTTP Response Status: 200 OK
+Response Body: [{"key":"search_radius_meters"}]
+Validation: Confirms Postgres storage query directly via PostgREST, resetting
+the 7-day Supabase auto-pause inactivity timer without service role privileges.
+
+4. GITHUB ACTIONS KEEP-ALIVE WORKFLOW DEFINITION (.github/workflows/keep-alive.yml)
+--------------------------------------------------------------------------------
+Triggers:
+- schedule: cron '0 0 */3 * *' (Every 3 days at 00:00 UTC)
+- workflow_dispatch: Manual trigger via GitHub UI / CLI
+Job: ubuntu-latest curl ping with retry 3, delay 5s, timeout 20s.
+
+5. GITHUB CLI AUTHENTICATION & WORKFLOW SCOPE STATUS
+--------------------------------------------------------------------------------
+Account: Ashith64 (keyring)
+Current Scopes: 'gist', 'read:org', 'repo'
+Workflow Push Requirement: GitHub OAuth requires 'workflow' scope to push .github/workflows/*.
+Device Approval URL: https://github.com/login/device
+One-Time Code: C989-557C
+================================================================================
