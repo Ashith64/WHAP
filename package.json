@@ -1,14 +1,33 @@
 {
   "name": "whap",
   "version": "1.0.0",
-  "description": "Wagers Hiring Application Platform",
+  "description": "Wagers Hiring Application Platform - Hyperlocal Campus Marketplace",
   "type": "module",
   "scripts": {
-    "test": "node --test tests/whap.test.js"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test tests/whap.test.js",
+    "test:e2e": "node --test tests/e2e/dual_session_simulation.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",
+    "canvas-confetti": "^1.9.4",
     "dotenv": "^18.0.9",
-    "pg": "^8.23.1"
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.460.0",
+    "pg": "^8.23.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-leaflet": "^4.2.1",
+    "react-router-dom": "^6.28.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "vite": "^5.4.11",
+    "vite-plugin-pwa": "^0.21.1"
   }
 }

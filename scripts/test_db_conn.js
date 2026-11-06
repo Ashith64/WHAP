@@ -16,8 +16,9 @@ const projectRef = envConfig.SUPABASE_PROJECT_REF;
 const dbPassword = envConfig.SUPABASE_DB_PASSWORD;
 
 const hosts = [
-  `db.${projectRef}.supabase.co`,
-  `aws-0-ap-south-1.pooler.supabase.com`
+  `aws-0-ap-southeast-1.pooler.supabase.com`,
+  `aws-0-ap-south-1.pooler.supabase.com`,
+  `db.${projectRef}.supabase.co`
 ];
 
 async function testConnection() {

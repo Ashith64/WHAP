@@ -17,8 +17,20 @@ dist-ssr/
 build/
 *.local
 
+# Vercel deployment artifacts & cache
+.vercel/
+
+# Test coverage artifacts
+coverage/
+.nyc_output/
+
 # IDE / OS files
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Agent scratch directories (prevent committing internal agent runs)
+.agents/teamwork/*/
+!.agents/teamwork/ORIGINAL_REQUEST.md
+!.agents/teamwork/PROJECT.md

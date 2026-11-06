@@ -1,0 +1,46 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import 'leaflet/dist/leaflet.css';
+
+@layer utilities {
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0.5rem);
+  }
+}
+
+/* Leaflet Pulse Keyframe Animation */
+@keyframes leaflet-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.85;
+  }
+  70% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.leaflet-pulse-ring {
+  animation: leaflet-pulse 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+/* Shake animation for incorrect OTP */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+/* Ensure Leaflet controls don't overlap app header */
+.leaflet-top, .leaflet-bottom {
+  z-index: 10 !important;
+}
