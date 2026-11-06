@@ -9,9 +9,8 @@ All core code, tests, regressions, documentation, and local/remote configuration
 
 ## 1. Vercel Deployment Device Approval
 
-- **Device URL**: [https://vercel.com/oauth/device?user_code=CZZR-GPCM](https://vercel.com/oauth/device?user_code=CZZR-GPCM)
-- **User Code**: `CZZR-GPCM`
-- **Action**: Open the URL in your browser and click "Approve" / "Connect".
+- **Device URL**: [https://vercel.com/oauth/device](https://vercel.com/oauth/device)
+- **Action**: Run `npx vercel login` in terminal, open the printed verification URL, and click "Approve". (Alternatively, set `VERCEL_TOKEN`).
 - **Follow-up Command** (once approved):
   ```powershell
   $envContent = Get-Content d:\WHAP\.env.local -Raw
@@ -31,8 +30,7 @@ All core code, tests, regressions, documentation, and local/remote configuration
 ## 2. GitHub CLI `workflow` Scope Approval
 
 - **Device URL**: [https://github.com/login/device](https://github.com/login/device)
-- **User Code**: `C989-557C` (already copied to clipboard)
-- **Action**: Open the URL in your browser, paste code `C989-557C`, and click "Authorize github".
+- **Action**: Run `gh auth refresh -h github.com -s workflow`, open the URL in your browser, enter the printed one-time device code, and authorize.
 - **Follow-up Command** (once approved):
   ```powershell
   # Stage and push keep-alive workflow
