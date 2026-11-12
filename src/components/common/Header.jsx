@@ -40,7 +40,7 @@ export function Header() {
                 WHAP
               </span>
               <span className="text-[10px] text-brand-600 font-semibold tracking-wider uppercase">
-                Campus Marketplace
+                Hyperlocal Marketplace
               </span>
             </div>
           </Link>
@@ -60,19 +60,19 @@ export function Header() {
 
           {user && (
             <>
-              {/* Role Toggle Pill (Requester <-> Worker) */}
+              {/* Mode Toggle Pill (Hiring <-> Working) */}
               {role !== 'ADMIN' && (
                 <button
                   onClick={handleToggleRole}
-                  title="Switch between Requester and Worker mode"
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border transition-all ${
+                  title="Switch between Hiring (Post Tasks) and Working (Find Jobs)"
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border transition-all active:scale-95 ${
                     role === 'REQUESTER'
                       ? 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100'
                       : 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
                   }`}
                 >
                   <ArrowLeftRight className="w-3 h-3" />
-                  <span>{role === 'REQUESTER' ? 'Requester' : 'Worker'}</span>
+                  <span>{role === 'REQUESTER' ? 'Hiring' : 'Working'}</span>
                 </button>
               )}
 

@@ -3,24 +3,10 @@ import React from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import { useNavigate } from 'react-router-dom';
-
-const getCategoryColor = (category) => {
-  switch (category) {
-    case 'XEROX_PICKUP':
-      return '#4f46e5'; // Indigo
-    case 'BUY_ITEMS':
-      return '#059669'; // Emerald
-    case 'CARRY_THINGS':
-      return '#d97706'; // Amber
-    case 'QUEUE':
-      return '#7c3aed'; // Violet
-    default:
-      return '#334155'; // Slate
-  }
-};
+import { getCategoryMeta } from '../../constants/categories';
 
 export const createTaskPriceIcon = (price, category) => {
-  const bg = getCategoryColor(category);
+  const bg = getCategoryMeta(category).markerBg;
   return L.divIcon({
     className: 'custom-task-price-pin',
     html: `
@@ -65,11 +51,11 @@ export function TaskPriceMarker({ task, userRole = 'WORKER' }) {
       <Popup>
         <div className="p-1 min-w-[190px]">
           <span className="text-[10px] uppercase font-bold text-brand-600 tracking-wider">
-            {task.category?.replace(/_/g, ' ')}
+            {getCategoryMeta(task.category).label}
           </span>
           <h4 className="font-bold text-slate-900 text-xs mt-0.5">{task.title}</h4>
           <p className="text-[11px] text-slate-500 mt-1 line-clamp-2">
-            {task.address || task.description || 'Campus chore'}
+            {task.address || task.description || 'Local task'}
           </p>
           <div className="mt-2.5 flex items-center justify-between pt-1.5 border-t border-slate-100">
             <span className="font-extrabold text-slate-900 text-xs">₹{price}</span>

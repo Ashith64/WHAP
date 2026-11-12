@@ -8,6 +8,7 @@ import { OtpDisplayCard } from '../components/requester/OtpDisplayCard';
 import { LiveBidsList } from '../components/requester/LiveBidsList';
 import { EscrowStrip } from '../components/requester/EscrowStrip';
 import { Toast } from '../components/common/Toast';
+import { getCategoryMeta } from '../constants/categories';
 import {
   ArrowLeft,
   MapPin,
@@ -17,26 +18,12 @@ import {
   Star,
   CheckCircle2,
   Clock,
-  Printer,
-  ShoppingBag,
-  Package,
-  Users,
-  HelpCircle,
 } from 'lucide-react';
 
 const getCategoryIcon = (category) => {
-  switch (category) {
-    case 'XEROX_PICKUP':
-      return <Printer className="w-5 h-5 text-indigo-600" />;
-    case 'BUY_ITEMS':
-      return <ShoppingBag className="w-5 h-5 text-emerald-600" />;
-    case 'CARRY_THINGS':
-      return <Package className="w-5 h-5 text-amber-600" />;
-    case 'QUEUE':
-      return <Users className="w-5 h-5 text-violet-600" />;
-    default:
-      return <HelpCircle className="w-5 h-5 text-slate-600" />;
-  }
+  const meta = getCategoryMeta(category);
+  const IconComp = meta.icon;
+  return <IconComp className={`w-5 h-5 ${meta.color}`} />;
 };
 
 export function RequesterTaskDetailScreen() {
@@ -87,7 +74,7 @@ export function RequesterTaskDetailScreen() {
   };
 
   const handleCancelTask = async () => {
-    if (!window.confirm('Are you sure you want to cancel this chore? Any escrow funds will be fully refunded.')) {
+    if (!window.confirm('Are you sure you want to cancel this task? Any escrow funds will be fully refunded.')) {
       return;
     }
     setCancelling(true);
@@ -126,7 +113,7 @@ export function RequesterTaskDetailScreen() {
     return (
       <div className="min-h-[50vh] flex flex-col items-center justify-center p-6 text-slate-500">
         <div className="w-8 h-8 border-3 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-3 text-xs font-medium">Loading chore details...</p>
+        <p className="mt-3 text-xs font-medium">Loading task details...</p>
       </div>
     );
   }
@@ -216,7 +203,7 @@ export function RequesterTaskDetailScreen() {
         <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 pt-1">
           <div className="flex items-center gap-1.5">
             <MapPin className="w-3.5 h-3.5 text-brand-600 shrink-0" />
-            <span className="font-medium text-slate-700">{task.address || 'Campus Location'}</span>
+            <span className="font-medium text-slate-700">{task.address || 'Local Area'}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
@@ -265,7 +252,7 @@ export function RequesterTaskDetailScreen() {
               className="text-xs font-semibold text-red-600 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors inline-flex items-center gap-1.5"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              <span>{cancelling ? 'Cancelling...' : 'Cancel Chore & Refund Escrow'}</span>
+              <span>{cancelling ? 'Cancelling...' : 'Cancel Task & Refund Escrow'}</span>
             </button>
           </div>
         </div>
@@ -298,7 +285,7 @@ export function RequesterTaskDetailScreen() {
       {isCompleted && (
         <div className="bg-white rounded-2xl border border-slate-200 p-5 text-center space-y-3">
           <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto" />
-          <h3 className="font-extrabold text-slate-900 text-base">Chore Completed!</h3>
+          <h3 className="font-extrabold text-slate-900 text-base">Task Completed!</h3>
           <p className="text-xs text-slate-500 max-w-sm mx-auto">
             The completion OTP was verified and escrow was released to the worker.
           </p>

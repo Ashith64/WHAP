@@ -78,7 +78,7 @@ export function AdminDisputesScreen() {
         <div className="p-12 text-center bg-white rounded-2xl border border-slate-200">
           <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto mb-2" />
           <h3 className="font-bold text-slate-800 text-sm">No Active Disputes</h3>
-          <p className="text-xs text-slate-400 mt-1">All campus chores are operating normally with zero conflicts.</p>
+          <p className="text-xs text-slate-400 mt-1">All local tasks are operating normally with zero conflicts.</p>
         </div>
       ) : (
         <div className="space-y-4">

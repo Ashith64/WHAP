@@ -2,86 +2,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '../services/supabaseClient';
 
-export const DEMO_ACCOUNTS = [
-  {
-    key: 'req1',
-    label: 'Requester 1 (Rahul)',
-    badge: 'Req 1',
-    role: 'REQUESTER',
-    email: 'requester_1@whap.local',
-    password: 'whap_demo_password_123',
-    department: 'Eng Dept',
-    balance: 500.0,
-    color: 'bg-blue-600 hover:bg-blue-700',
-  },
-  {
-    key: 'req2',
-    label: 'Requester 2 (Priya)',
-    badge: 'Req 2',
-    role: 'REQUESTER',
-    email: 'requester_2@whap.local',
-    password: 'whap_demo_password_123',
-    department: 'Bio Dept',
-    balance: 500.0,
-    color: 'bg-indigo-600 hover:bg-indigo-700',
-  },
-  {
-    key: 'wrk1',
-    label: 'Worker 1 (Amit)',
-    badge: 'Wrk 1',
-    role: 'WORKER',
-    email: 'worker_1@whap.local',
-    password: 'whap_demo_password_123',
-    department: 'Main Gate (15m)',
-    balance: 0.0,
-    color: 'bg-emerald-600 hover:bg-emerald-700',
-  },
-  {
-    key: 'wrk2',
-    label: 'Worker 2 (Sneha)',
-    badge: 'Wrk 2',
-    role: 'WORKER',
-    email: 'worker_2@whap.local',
-    password: 'whap_demo_password_123',
-    department: 'Library (350m)',
-    balance: 0.0,
-    color: 'bg-teal-600 hover:bg-teal-700',
-  },
-  {
-    key: 'wrk3',
-    label: 'Worker 3 (Karthik)',
-    badge: 'Wrk 3',
-    role: 'WORKER',
-    email: 'worker_3@whap.local',
-    password: 'whap_demo_password_123',
-    department: 'Hostel Block (950m)',
-    balance: 0.0,
-    color: 'bg-green-600 hover:bg-green-700',
-  },
-  {
-    key: 'wrk4',
-    label: 'Worker 4 (Deepa)',
-    badge: 'Wrk 4',
-    role: 'WORKER',
-    email: 'worker_4@whap.local',
-    password: 'whap_demo_password_123',
-    department: 'Sports Ground (1.2km)',
-    balance: 0.0,
-    color: 'bg-lime-600 hover:bg-lime-700',
-  },
-  {
-    key: 'admin',
-    label: 'Campus Admin',
-    badge: 'Admin',
-    role: 'ADMIN',
-    email: 'admin@whap.local',
-    password: 'whap_admin_password_123',
-    department: 'Campus Administration',
-    balance: 0.0,
-    color: 'bg-purple-600 hover:bg-purple-700',
-  },
-];
-
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -203,11 +123,15 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const loginAsDemo = async (demoKey) => {
-    const account = DEMO_ACCOUNTS.find((a) => a.key === demoKey);
-    if (!account) throw new Error('Demo account not found');
-    return login(account.email, account.password);
-  };
+  const updateLocation = useCallback(async ({ lat, lng }) => {
+    if (!user?.id || lat == null || lng == null) return;
+    try {
+      const locationWkt = `SRID=4326;POINT(${lng} ${lat})`;
+      await supabase.from('profiles').update({ location: locationWkt }).eq('id', user.id);
+    } catch (err) {
+      console.warn('Could not persist profile location:', err);
+    }
+  }, [user?.id]);
 
   const register = async ({ email, password, name, role = 'REQUESTER', lat = null, lng = null }) => {
     setAuthError(null);
@@ -282,10 +206,10 @@ export function AuthProvider({ children }) {
     loading,
     authError,
     login,
-    loginAsDemo,
     register,
     logout,
     switchRole,
+    updateLocation,
     refreshUserData,
     role: profile?.role || user?.user_metadata?.role || 'REQUESTER',
   };

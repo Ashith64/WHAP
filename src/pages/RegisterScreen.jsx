@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { UserPlus, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { useGeolocation } from '../hooks/useGeolocation';
+import { UserPlus, AlertCircle, MapPin, Navigation } from 'lucide-react';
 
 export function RegisterScreen() {
   const { register } = useAuth();
   const navigate = useNavigate();
+  const { coords, loading: gpsLoading, error: gpsError, refreshLocation } = useGeolocation();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -34,8 +36,8 @@ export function RegisterScreen() {
         email: email.trim(),
         password,
         role,
-        lat: 13.0184,
-        lng: 77.5684,
+        lat: coords?.lat ?? null,
+        lng: coords?.lng ?? null,
       });
 
       if (role === 'WORKER') navigate('/worker');
@@ -54,7 +56,7 @@ export function RegisterScreen() {
           W
         </div>
         <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Create an Account</h1>
-        <p className="text-xs text-slate-500">Join the WHAP campus micro-task network</p>
+        <p className="text-xs text-slate-500">Join the WHAP local micro-task network</p>
       </div>
 
       {error && (
@@ -80,7 +82,7 @@ export function RegisterScreen() {
                   : 'border-slate-200 text-slate-600 hover:bg-slate-50'
               }`}
             >
-              Task Requester
+              Hire Help (Post Tasks)
             </button>
             <button
               type="button"
@@ -91,7 +93,7 @@ export function RegisterScreen() {
                   : 'border-slate-200 text-slate-600 hover:bg-slate-50'
               }`}
             >
-              Task Worker
+              Earn Money (Find Work)
             </button>
           </div>
         </div>
@@ -102,18 +104,18 @@ export function RegisterScreen() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Rahul Sharma"
+            placeholder="e.g. Alex Johnson"
             className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-brand-500/20 focus:border-brand-600 outline-none"
           />
         </div>
 
         <div className="space-y-1">
-          <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Campus Email</label>
+          <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Email</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="e.g. rahul@whap.local"
+            placeholder="you@example.com"
             className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-brand-500/20 focus:border-brand-600 outline-none"
           />
         </div>
@@ -127,6 +129,30 @@ export function RegisterScreen() {
             placeholder="Min 6 characters"
             className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-brand-500/20 focus:border-brand-600 outline-none"
           />
+        </div>
+
+        {/* Live Location Status */}
+        <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 text-[11px] text-slate-600">
+            <MapPin className="w-3.5 h-3.5 text-brand-600 shrink-0" />
+            {gpsLoading ? (
+              <span>Detecting your live GPS location...</span>
+            ) : coords ? (
+              <span>
+                Live location ready ({coords.lat.toFixed(4)}, {coords.lng.toFixed(4)})
+              </span>
+            ) : (
+              <span className="text-amber-700">{gpsError || 'Location not set yet (you can set it on the map later)'}</span>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={refreshLocation}
+            className="text-[11px] font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1 shrink-0"
+          >
+            <Navigation className="w-3 h-3" />
+            <span>Detect</span>
+          </button>
         </div>
 
         <button

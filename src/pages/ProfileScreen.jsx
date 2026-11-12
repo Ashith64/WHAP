@@ -44,7 +44,7 @@ export function ProfileScreen() {
         </div>
 
         <div>
-          <h2 className="text-base font-extrabold text-slate-900">{profile?.name || 'Campus User'}</h2>
+          <h2 className="text-base font-extrabold text-slate-900">{profile?.name || 'WHAP Member'}</h2>
           <div className="flex items-center justify-center gap-1.5 text-xs text-slate-500 mt-0.5">
             <Mail className="w-3.5 h-3.5 text-slate-400" />
             <span>{user?.email}</span>
@@ -61,7 +61,7 @@ export function ProfileScreen() {
                 : 'bg-purple-100 text-purple-800'
             }`}
           >
-            {role}
+            {role === 'REQUESTER' ? 'Hiring Mode' : role === 'WORKER' ? 'Working Mode' : role}
           </span>
         </div>
       </div>
@@ -69,7 +69,7 @@ export function ProfileScreen() {
       {/* Reputation & Ratings Card */}
       <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-3">
         <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
-          Campus Reputation (Double-Blind Verified)
+          Reputation &amp; Reviews (Double-Blind Verified)
         </h3>
 
         <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-100">

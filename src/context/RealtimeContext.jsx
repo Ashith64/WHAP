@@ -38,11 +38,23 @@ export function RealtimeProvider({ children }) {
     };
   }, []);
 
-  // 3-Second Resilient Polling Fallback Heartbeat
+  const networkStatusRef = useRef('LIVE');
+
   useEffect(() => {
+    networkStatusRef.current = networkStatus;
+  }, [networkStatus]);
+
+  // 3-Second Resilient Polling Fallback Heartbeat (15s safety sync when Realtime is LIVE)
+  useEffect(() => {
+    let tickCount = 0;
     const interval = setInterval(() => {
       if (!isOnlineRef.current) {
         setNetworkStatus('OFFLINE');
+        return;
+      }
+
+      tickCount += 1;
+      if (networkStatusRef.current === 'LIVE' && tickCount % 5 !== 0) {
         return;
       }
 

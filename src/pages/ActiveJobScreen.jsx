@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { OtpInputBoxes } from '../components/worker/OtpInputBoxes';
 import { Toast } from '../components/common/Toast';
+import { getCategoryMeta } from '../constants/categories';
 import confetti from 'canvas-confetti';
 import {
   Briefcase,
@@ -14,26 +15,12 @@ import {
   ArrowRight,
   Star,
   ShieldAlert,
-  Printer,
-  ShoppingBag,
-  Package,
-  Users,
-  HelpCircle,
 } from 'lucide-react';
 
 const getCategoryIcon = (category) => {
-  switch (category) {
-    case 'XEROX_PICKUP':
-      return <Printer className="w-5 h-5 text-indigo-600" />;
-    case 'BUY_ITEMS':
-      return <ShoppingBag className="w-5 h-5 text-emerald-600" />;
-    case 'CARRY_THINGS':
-      return <Package className="w-5 h-5 text-amber-600" />;
-    case 'QUEUE':
-      return <Users className="w-5 h-5 text-violet-600" />;
-    default:
-      return <HelpCircle className="w-5 h-5 text-slate-600" />;
-  }
+  const meta = getCategoryMeta(category);
+  const IconComp = meta.icon;
+  return <IconComp className={`w-5 h-5 ${meta.color}`} />;
 };
 
 export function ActiveJobScreen() {
@@ -93,7 +80,7 @@ export function ActiveJobScreen() {
         });
 
         setCompletedPayout(res);
-        setToast({ message: 'Chore verified! Payout credited to your wallet.', type: 'success' });
+        setToast({ message: 'Job verified! Payout credited to your wallet.', type: 'success' });
         await refreshUserData();
       } else {
         setHasOtpError(true);
@@ -156,14 +143,14 @@ export function ActiveJobScreen() {
         <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600 shadow-sm">
           <CheckCircle2 className="w-10 h-10" />
         </div>
-        <h1 className="text-xl font-extrabold text-slate-900">Chore Successfully Completed!</h1>
+        <h1 className="text-xl font-extrabold text-slate-900">Job Successfully Completed!</h1>
         <p className="text-xs text-slate-500">
           The 4-digit completion code was validated and escrow released.
         </p>
 
         <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs space-y-1.5 max-w-xs mx-auto">
           <div className="flex justify-between text-emerald-900">
-            <span>Total Chore Price:</span>
+            <span>Total Agreed Price:</span>
             <span className="font-bold">₹{job?.agreed_price}</span>
           </div>
           <div className="flex justify-between text-emerald-700">
@@ -195,7 +182,7 @@ export function ActiveJobScreen() {
             to="/worker"
             className="w-full py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors"
           >
-            Find Next Chore
+            Find Next Job
           </Link>
         </div>
       </div>
@@ -211,13 +198,13 @@ export function ActiveJobScreen() {
         </div>
         <h2 className="text-base font-bold text-slate-900">No Active Job</h2>
         <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
-          You don't currently have an assigned chore in progress. Discover open tasks nearby and place bids!
+          You don't currently have an assigned job in progress. Discover open tasks nearby and submit offers!
         </p>
         <Link
           to="/worker"
           className="mt-5 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-700 text-white shadow-xs transition-colors"
         >
-          <span>Explore Nearby Chores</span>
+          <span>Explore Local Jobs</span>
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
@@ -272,7 +259,7 @@ export function ActiveJobScreen() {
         <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600">
           <div className="flex items-center gap-1.5">
             <MapPin className="w-3.5 h-3.5 text-brand-600 shrink-0" />
-            <span className="font-semibold text-slate-800">{job.address || 'Campus Location'}</span>
+            <span className="font-semibold text-slate-800">{job.address || 'Local Area'}</span>
           </div>
           {job.requester && (
             <div className="flex items-center gap-1 text-slate-700">

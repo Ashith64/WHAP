@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import { Header } from './components/common/Header';
 import { BottomNav } from './components/common/BottomNav';
-import { DemoAccountBar } from './components/common/DemoAccountBar';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 
 // Pages
@@ -28,7 +27,7 @@ function RootRedirector() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-slate-500">
         <div className="w-8 h-8 border-3 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-3 text-xs font-medium">Entering WHAP Campus...</p>
+        <p className="mt-3 text-xs font-medium">Loading WHAP...</p>
       </div>
     );
   }
@@ -46,7 +45,7 @@ function NotFound() {
   return (
     <div className="max-w-md mx-auto p-12 text-center">
       <h2 className="text-3xl font-extrabold text-slate-900">404</h2>
-      <p className="text-xs text-slate-500 mt-2">The page you requested was not found on campus.</p>
+      <p className="text-xs text-slate-500 mt-2">The page you requested was not found.</p>
       <a
         href="/"
         className="mt-4 inline-block px-4 py-2 bg-brand-600 text-white rounded-xl text-xs font-bold shadow-xs hover:bg-brand-700 transition-colors"
@@ -61,9 +60,6 @@ export function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 pb-16 sm:pb-0">
-        {/* Sticky 1-Click Demo Accounts Switcher Bar */}
-        <DemoAccountBar />
-
         {/* Global Navigation Header */}
         <Header />
 

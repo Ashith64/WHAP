@@ -101,7 +101,7 @@ export function MyBidsScreen() {
           <p className="text-xs font-semibold text-slate-700">No {tab.toLowerCase()} bids</p>
           <p className="text-[11px] text-slate-400 mt-1">
             {tab === 'PENDING'
-              ? 'Explore open chores on campus and place bids to earn money.'
+              ? 'Explore nearby local tasks and place bids to earn money.'
               : 'Bids will appear here once requesters review them.'}
           </p>
           {tab === 'PENDING' && (
@@ -109,7 +109,7 @@ export function MyBidsScreen() {
               to="/worker"
               className="mt-4 inline-block px-3.5 py-1.5 rounded-lg text-xs font-bold bg-brand-50 text-brand-700 hover:bg-brand-100 transition-colors"
             >
-              Browse Open Chores
+              Browse Nearby Jobs
             </Link>
           )}
         </div>
@@ -126,9 +126,9 @@ export function MyBidsScreen() {
             >
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  {bid.task?.category?.replace(/_/g, ' ') || 'Chore'}
+                  {bid.task?.category?.replace(/_/g, ' ') || 'Task'}
                 </span>
-                <h3 className="font-bold text-slate-900 text-xs mt-0.5">{bid.task?.title || 'Campus Task'}</h3>
+                <h3 className="font-bold text-slate-900 text-xs mt-0.5">{bid.task?.title || 'Local Task'}</h3>
                 {bid.message && (
                   <p className="text-[11px] text-slate-500 italic mt-0.5">"{bid.message}"</p>
                 )}

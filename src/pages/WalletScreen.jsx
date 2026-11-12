@@ -28,7 +28,7 @@ export function WalletScreen() {
   // Withdrawal modal state
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState('');
-  const [upiId, setUpiId] = useState('student@upi');
+  const [upiId, setUpiId] = useState('yourname@upi');
 
   const handleTopup = async (amount) => {
     setSubmitting(true);
@@ -148,8 +148,8 @@ export function WalletScreen() {
 
         <p className="text-[11px] text-brand-100/90 leading-relaxed">
           {role === 'REQUESTER'
-            ? 'Available to lock into escrow when accepting chore bids.'
-            : 'Earnings from completed campus chores ready for simulated withdrawal.'}
+            ? 'Available to lock into escrow when accepting task bids.'
+            : 'Earnings from completed local tasks ready for simulated withdrawal.'}
         </p>
 
         {role === 'WORKER' && (
@@ -291,7 +291,7 @@ export function WalletScreen() {
           >
             <h3 className="font-bold text-slate-900 text-base">Simulated Payout Withdrawal</h3>
             <p className="text-xs text-slate-500">
-              Transfer simulated chore earnings to your virtual UPI account.
+              Transfer simulated earnings to your virtual UPI account.
             </p>
 
             <div className="space-y-1">

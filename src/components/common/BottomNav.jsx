@@ -28,18 +28,18 @@ export function BottomNav() {
 
     if (role === 'WORKER') {
       return [
-        { to: '/worker', label: 'Nearby', icon: Compass },
-        { to: '/worker/bids', label: 'My Bids', icon: Clock },
-        { to: '/worker/active', label: 'Active Job', icon: Briefcase },
+        { to: '/worker', label: 'Find Jobs', icon: Compass },
+        { to: '/worker/bids', label: 'My Offers', icon: Clock },
+        { to: '/worker/active', label: 'Active', icon: Briefcase },
         { to: '/worker/wallet', label: 'Wallet', icon: Wallet },
         { to: '/worker/profile', label: 'Profile', icon: User },
       ];
     }
 
-    // Default: REQUESTER
+    // Default: REQUESTER (Hiring Mode)
     return [
-      { to: '/requester', label: 'Home', icon: LayoutGrid },
-      { to: '/requester/post-task', label: 'Post Chore', icon: PlusCircle, isPrimary: true },
+      { to: '/requester', label: 'My Tasks', icon: LayoutGrid },
+      { to: '/requester/post-task', label: 'Post Task', icon: PlusCircle, isPrimary: true },
       { to: '/requester/wallet', label: 'Wallet', icon: Wallet },
       { to: '/requester/profile', label: 'Profile', icon: User },
     ];

@@ -39,7 +39,7 @@ export function EscrowStrip({ escrow, status }) {
           <div>
             <p className="font-bold">₹{amount} Escrow Released</p>
             <p className="text-[11px] text-blue-700">
-              Chore verified. Worker received net payout minus 10% platform fee.
+              Task verified. Helper received net payout minus 10% platform fee.
             </p>
           </div>
         </div>

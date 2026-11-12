@@ -3,42 +3,31 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useRealtimeTask } from '../hooks/useRealtimeTask';
+import { useGeolocation } from '../hooks/useGeolocation';
 import { api } from '../services/api';
 import { BidSheet } from '../components/worker/BidSheet';
 import { Toast } from '../components/common/Toast';
+import { getCategoryMeta } from '../constants/categories';
 import {
   ArrowLeft,
   MapPin,
   Calendar,
   Star,
-  Printer,
-  ShoppingBag,
-  Package,
-  Users,
-  HelpCircle,
   Briefcase,
 } from 'lucide-react';
 
 const getCategoryIcon = (category) => {
-  switch (category) {
-    case 'XEROX_PICKUP':
-      return <Printer className="w-5 h-5 text-indigo-600" />;
-    case 'BUY_ITEMS':
-      return <ShoppingBag className="w-5 h-5 text-emerald-600" />;
-    case 'CARRY_THINGS':
-      return <Package className="w-5 h-5 text-amber-600" />;
-    case 'QUEUE':
-      return <Users className="w-5 h-5 text-violet-600" />;
-    default:
-      return <HelpCircle className="w-5 h-5 text-slate-600" />;
-  }
+  const meta = getCategoryMeta(category);
+  const IconComp = meta.icon;
+  return <IconComp className={`w-5 h-5 ${meta.color}`} />;
 };
 
 export function WorkerTaskDetailScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
-  const { task, loading, error, refetch } = useRealtimeTask(id);
+  const { user } = useAuth();
+  const { coords } = useGeolocation();
+  const { task, loading, error } = useRealtimeTask(id);
 
   const [activeJob, setActiveJob] = useState(null);
   const [toast, setToast] = useState(null);
@@ -60,7 +49,7 @@ export function WorkerTaskDetailScreen() {
     return (
       <div className="min-h-[50vh] flex flex-col items-center justify-center p-6 text-slate-500">
         <div className="w-8 h-8 border-3 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-3 text-xs font-medium">Loading chore details...</p>
+        <p className="mt-3 text-xs font-medium">Loading job details...</p>
       </div>
     );
   }
@@ -74,7 +63,7 @@ export function WorkerTaskDetailScreen() {
           onClick={() => navigate('/worker')}
           className="mt-4 text-xs font-semibold text-brand-600 hover:underline"
         >
-          ← Return to Nearby Chores
+          ← Back to Find Local Jobs
         </button>
       </div>
     );
@@ -82,13 +71,10 @@ export function WorkerTaskDetailScreen() {
 
   const existingBid = task.bids?.find((b) => b.worker_id === user?.id);
   const isAssignedToMe = task.assigned_worker_id === user?.id;
-
-  const workerCoords = profile?.location?.coordinates
-    ? { lat: profile.location.coordinates[1], lng: profile.location.coordinates[0] }
-    : null;
+  const workerCoords = coords || null;
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-5 space-y-5">
+    <div className="max-w-2xl mx-auto px-4 py-5 space-y-5 animate-fade-in">
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
       <button
@@ -96,7 +82,7 @@ export function WorkerTaskDetailScreen() {
         className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        <span>Back to Nearby Chores</span>
+        <span>Back to Local Jobs</span>
       </button>
 
       {/* Task Specification Card */}
@@ -131,7 +117,7 @@ export function WorkerTaskDetailScreen() {
         <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs text-slate-500 border-t border-slate-100">
           <div className="flex items-center gap-1.5">
             <MapPin className="w-3.5 h-3.5 text-brand-600 shrink-0" />
-            <span className="font-medium text-slate-700">{task.address || 'Campus Location'}</span>
+            <span className="font-medium text-slate-700">{task.address || 'Local Area'}</span>
           </div>
 
           {task.requester && (
@@ -155,7 +141,7 @@ export function WorkerTaskDetailScreen() {
           <div className="flex items-center gap-2.5 text-xs text-blue-900">
             <Briefcase className="w-5 h-5 text-blue-600 shrink-0" />
             <div>
-              <p className="font-bold">This chore is assigned to you!</p>
+              <p className="font-bold">This job is assigned to you!</p>
               <p className="text-blue-700 text-[11px]">Go to your Active Job view to enter the completion OTP.</p>
             </div>
           </div>

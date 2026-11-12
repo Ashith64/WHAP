@@ -17,7 +17,7 @@ export default defineConfig({
       manifest: {
         name: 'WHAP - Hyperlocal Tasks',
         short_name: 'WHAP',
-        description: 'Wagers Hiring Application Platform - Campus Micro-Tasks',
+        description: 'Wagers Hiring Application Platform - Hyperlocal Micro-Tasks',
         theme_color: '#2563eb',
         background_color: '#f8fafc',
         display: 'standalone',

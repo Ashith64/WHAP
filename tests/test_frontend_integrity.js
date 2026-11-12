@@ -337,40 +337,27 @@ describe('WHAP Frontend Integrity & Adversarial Validation', () => {
   });
 
   // ===========================================================================
-  // Suite 4: 1-Click Quick-Switch Demo Toolbar & Seed Data Synchronization
+  // Suite 4: Clean Authentication, Live Geolocation & General Categories
   // ===========================================================================
-  describe('Suite 4: 1-Click Quick-Switch Demo Toolbar & Seed Data Synchronization', () => {
-    it('AuthContext.jsx defines exactly 7 DEMO_ACCOUNTS matching seed specifications', () => {
+  describe('Suite 4: Clean Authentication, Live Geolocation & General Categories', () => {
+    it('AuthContext.jsx and LoginScreen.jsx do not contain hardcoded demo accounts or passwords', () => {
       const authContent = fs.readFileSync(path.join(ROOT_DIR, 'src', 'context', 'AuthContext.jsx'), 'utf8');
+      const loginContent = fs.readFileSync(path.join(ROOT_DIR, 'src', 'pages', 'LoginScreen.jsx'), 'utf8');
 
-      // Verify all 7 emails are present
-      const expectedEmails = [
-        'requester_1@whap.local',
-        'requester_2@whap.local',
-        'worker_1@whap.local',
-        'worker_2@whap.local',
-        'worker_3@whap.local',
-        'worker_4@whap.local',
-        'admin@whap.local'
-      ];
-
-      for (const email of expectedEmails) {
-        assert.ok(authContent.includes(email), `DEMO_ACCOUNTS must include ${email}`);
-      }
-
-      assert.ok(authContent.includes('whap_demo_password_123'), 'Must contain worker/requester demo password');
-      assert.ok(authContent.includes('whap_admin_password_123'), 'Must contain admin demo password');
+      assert.ok(!authContent.includes('DEMO_ACCOUNTS'), 'AuthContext must not export DEMO_ACCOUNTS');
+      assert.ok(!authContent.includes('whap_demo_password_123'), 'AuthContext must not contain hardcoded demo passwords');
+      assert.ok(!loginContent.includes('1-Click Demo Login'), 'LoginScreen must not render 1-Click Demo Login');
+      assert.ok(!fs.existsSync(path.join(ROOT_DIR, 'src', 'components', 'common', 'DemoAccountBar.jsx')), 'DemoAccountBar.jsx must be removed');
     });
 
-    it('DemoAccountBar.jsx renders switcher toolbar and links to loginAsDemo', () => {
-      const demoBarContent = fs.readFileSync(path.join(ROOT_DIR, 'src', 'components', 'common', 'DemoAccountBar.jsx'), 'utf8');
+    it('useGeolocation.js uses navigator.geolocation and categories.js defines general categories', () => {
+      const geoContent = fs.readFileSync(path.join(ROOT_DIR, 'src', 'hooks', 'useGeolocation.js'), 'utf8');
+      const catContent = fs.readFileSync(path.join(ROOT_DIR, 'src', 'constants', 'categories.js'), 'utf8');
 
-      assert.ok(demoBarContent.includes('DEMO_ACCOUNTS'), 'DemoAccountBar must import DEMO_ACCOUNTS');
-      assert.ok(demoBarContent.includes('loginAsDemo'), 'DemoAccountBar must use loginAsDemo');
-      assert.ok(demoBarContent.includes('handleQuickSwitch'), 'DemoAccountBar must have handleQuickSwitch');
-      assert.ok(demoBarContent.includes('navigate(\'/admin\')'), 'DemoAccountBar must route Admin');
-      assert.ok(demoBarContent.includes('navigate(\'/worker\')'), 'DemoAccountBar must route Worker');
-      assert.ok(demoBarContent.includes('navigate(\'/requester\')'), 'DemoAccountBar must route Requester');
+      assert.ok(geoContent.includes('navigator.geolocation.getCurrentPosition'), 'useGeolocation must call navigator.geolocation.getCurrentPosition');
+      assert.ok(!geoContent.includes('13.0184'), 'useGeolocation must not hardcode IISc Bangalore coordinates');
+      assert.ok(catContent.includes('ERRANDS_DELIVERY'), 'categories.js must include general work categories');
+      assert.ok(catContent.includes('HOME_REPAIRS'), 'categories.js must include HOME_REPAIRS');
     });
 
     it('Empirical Remote Auth Probe: all 7 demo accounts successfully sign in to remote GoTrue', async () => {
@@ -500,7 +487,6 @@ describe('WHAP Frontend Integrity & Adversarial Validation', () => {
         { file: 'src/components/common/Header.jsx', exports: ['Header'] },
         { file: 'src/components/common/BottomNav.jsx', exports: ['BottomNav'] },
         { file: 'src/components/common/ProtectedRoute.jsx', exports: ['ProtectedRoute'] },
-        { file: 'src/components/common/DemoAccountBar.jsx', exports: ['DemoAccountBar'] },
         { file: 'src/components/common/NetworkStatus.jsx', exports: ['NetworkStatus'] },
         { file: 'src/components/common/Toast.jsx', exports: ['Toast'] },
         { file: 'src/components/map/LeafletMap.jsx', exports: ['LeafletMap'] },

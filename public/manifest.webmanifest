@@ -1,7 +1,7 @@
 {
   "name": "WHAP - Hyperlocal Tasks",
   "short_name": "WHAP",
-  "description": "Wagers Hiring Application Platform - Campus Micro-Tasks & Chores",
+  "description": "Wagers Hiring Application Platform - Hyperlocal Micro-Tasks & Local Jobs",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

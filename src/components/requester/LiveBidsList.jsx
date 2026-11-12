@@ -15,9 +15,9 @@ export function LiveBidsList({
   if (!bids || bids.length === 0) {
     return (
       <div className="bg-white rounded-xl border border-slate-200 p-6 text-center text-slate-500">
-        <p className="text-xs font-semibold text-slate-700">Waiting for Worker Bids</p>
+        <p className="text-xs font-semibold text-slate-700">Waiting for Offers</p>
         <p className="text-[11px] text-slate-400 mt-1">
-          Nearby students will discover your task and place bids shortly. Live updates active.
+          Nearby helpers will discover your task and send offers shortly. Live updates active.
         </p>
       </div>
     );
@@ -65,7 +65,7 @@ export function LiveBidsList({
                 <div>
                   <div className="flex items-center gap-1.5">
                     <span className="font-bold text-slate-900 text-xs">
-                      {bid.worker?.name || 'Campus Worker'}
+                      {bid.worker?.name || 'Local Worker'}
                     </span>
                     {bid.worker?.rating_average > 0 && (
                       <span className="inline-flex items-center text-[10px] font-semibold text-amber-600 bg-amber-50 px-1.5 py-0.2 rounded">

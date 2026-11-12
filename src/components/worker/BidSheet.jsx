@@ -64,10 +64,10 @@ export function BidSheet({
     <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
       <div>
         <h3 className="text-sm font-extrabold text-slate-900">
-          {existingBid ? 'Update Your Reverse Bid' : 'Place Your Reverse Bid'}
+          {existingBid ? 'Update Your Offer' : 'Make an Offer'}
         </h3>
         <p className="text-xs text-slate-500 mt-0.5">
-          Propose your price to do this chore (Min ₹{minBid}, Max ₹{maxBid}).
+          Propose your price to complete this task (Min ₹{minBid}, Max ₹{maxBid}).
         </p>
       </div>
 

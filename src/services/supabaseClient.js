@@ -24,7 +24,7 @@ export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '', {
   },
   global: {
     headers: {
-      'x-application-name': 'whap-campus-pwa',
+      'x-application-name': 'whap-hyperlocal-pwa',
     },
   },
 });

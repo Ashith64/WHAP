@@ -4,34 +4,23 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { useRealtime } from '../context/RealtimeContext';
+import { useGeolocation } from '../hooks/useGeolocation';
 import { LeafletMap } from '../components/map/LeafletMap';
+import { SkeletonGrid } from '../components/common/SkeletonCard';
+import { getCategoryMeta } from '../constants/categories';
 import {
   PlusCircle,
   AlertTriangle,
   Clock,
   CheckCircle2,
   ChevronRight,
-  Printer,
-  ShoppingBag,
-  Package,
-  Users,
-  HelpCircle,
   TrendingUp,
 } from 'lucide-react';
 
 const getCategoryIcon = (category) => {
-  switch (category) {
-    case 'XEROX_PICKUP':
-      return <Printer className="w-4 h-4 text-indigo-600" />;
-    case 'BUY_ITEMS':
-      return <ShoppingBag className="w-4 h-4 text-emerald-600" />;
-    case 'CARRY_THINGS':
-      return <Package className="w-4 h-4 text-amber-600" />;
-    case 'QUEUE':
-      return <Users className="w-4 h-4 text-violet-600" />;
-    default:
-      return <HelpCircle className="w-4 h-4 text-slate-600" />;
-  }
+  const meta = getCategoryMeta(category);
+  const IconComp = meta.icon;
+  return <IconComp className={`w-4 h-4 ${meta.color}`} />;
 };
 
 const getStatusBadge = (status) => {
@@ -72,11 +61,18 @@ const getStatusBadge = (status) => {
 };
 
 export function RequesterHomeScreen() {
-  const { user, profile } = useAuth();
+  const { user, updateLocation } = useAuth();
+  const { coords, source } = useGeolocation();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const { registerPolling } = useRealtime();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user?.id && coords && source === 'gps') {
+      updateLocation(coords);
+    }
+  }, [user?.id, coords, source, updateLocation]);
 
   const fetchRequesterTasks = async () => {
     if (!user?.id) return;
@@ -102,22 +98,16 @@ export function RequesterHomeScreen() {
 
   const isLimitReached = openTasks.length >= 3;
 
-  // Center coords from user profile or campus center
-  let userCoords = { lat: 13.0184, lng: 77.5684 };
-  if (profile?.location?.coordinates) {
-    userCoords = { lat: profile.location.coordinates[1], lng: profile.location.coordinates[0] };
-  }
-
   return (
-    <div className="max-w-4xl mx-auto px-4 py-5 space-y-6">
+    <div className="max-w-4xl mx-auto px-4 py-5 space-y-6 animate-fade-in">
       {/* Top Banner & Post Task Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
-            Requester Dashboard
+            My Posted Tasks
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Manage your campus chores and monitor live worker bids within 1.5 km
+            Post local work and review live offers from nearby helpers within 1.5 km
           </p>
         </div>
 
@@ -137,7 +127,7 @@ export function RequesterHomeScreen() {
               className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-700 text-white shadow-sm flex items-center justify-center gap-2 transition-colors"
             >
               <PlusCircle className="w-4 h-4" />
-              <span>Post New Chore</span>
+              <span>Post New Task</span>
             </Link>
           )}
         </div>
@@ -150,25 +140,25 @@ export function RequesterHomeScreen() {
           <div className="text-xs text-amber-900">
             <p className="font-bold">Open Task Limit Reached (3/3 Open Tasks)</p>
             <p className="mt-0.5 leading-relaxed text-amber-800">
-              Platform rules permit a maximum of 3 open tasks simultaneously. To post another chore,
+              Platform rules permit a maximum of 3 open tasks simultaneously. To post another task,
               please accept a worker bid, cancel an unneeded task, or wait for existing tasks to complete.
             </p>
           </div>
         </div>
       )}
 
-      {/* Campus Map View */}
+      {/* Local Map View */}
       <div>
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-700">
-            Campus Geofence (1.5 km Zone)
+            Local Geofence (1.5 km Zone)
           </h2>
           <span className="text-[11px] text-slate-400">
-            {tasks.filter((t) => t.status === 'OPEN' || t.status === 'ASSIGNED').length} Active Chores
+            {tasks.filter((t) => t.status === 'OPEN' || t.status === 'ASSIGNED').length} Active Tasks
           </span>
         </div>
         <LeafletMap
-          center={userCoords}
+          center={coords}
           zoom={15}
           tasks={tasks.filter((t) => t.status === 'OPEN' || t.status === 'ASSIGNED')}
           userRole="REQUESTER"
@@ -183,14 +173,12 @@ export function RequesterHomeScreen() {
         </h2>
 
         {loading ? (
-          <div className="p-8 text-center text-xs text-slate-400 bg-white rounded-2xl border border-slate-200">
-            Loading your tasks...
-          </div>
+          <SkeletonGrid count={4} />
         ) : openTasks.length === 0 && assignedTasks.length === 0 ? (
           <div className="p-8 text-center bg-white rounded-2xl border border-slate-200">
-            <p className="text-xs font-semibold text-slate-700">No Active Chores</p>
+            <p className="text-xs font-semibold text-slate-700">No Active Tasks</p>
             <p className="text-[11px] text-slate-400 mt-1 max-w-sm mx-auto">
-              Need printing, food delivery, or help in a queue? Post your chore and nearby students will bid in minutes.
+              Need an errand run, home repair, moving help, or any local task? Post it and nearby helpers will send offers in minutes.
             </p>
             {!isLimitReached && (
               <Link
@@ -210,7 +198,7 @@ export function RequesterHomeScreen() {
                 <div
                   key={task.id}
                   onClick={() => navigate(`/requester/tasks/${task.id}`)}
-                  className="bg-white p-4 rounded-2xl border border-slate-200 hover:border-brand-300 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
+                  className="bg-white p-4 rounded-2xl border border-slate-200 hover:border-brand-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] transition-all duration-200 cursor-pointer flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between gap-2">
@@ -266,7 +254,7 @@ export function RequesterHomeScreen() {
       {pastTasks.length > 0 && (
         <div className="space-y-2 pt-2">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-            Recent Completed & Closed Chores
+            Recent Completed &amp; Closed Tasks
           </h2>
           <div className="divide-y divide-slate-100 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
             {pastTasks.slice(0, 5).map((task) => (
